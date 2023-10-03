@@ -1,4 +1,6 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
+
+import styles from "./cart.style";
 
 const Cart = () => {
   return (
@@ -9,5 +11,3 @@ const Cart = () => {
 };
 
 export default Cart;
-
-const styles = StyleSheet.create({});

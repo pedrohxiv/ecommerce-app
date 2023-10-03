@@ -5,7 +5,14 @@ import { useFonts } from "expo-font";
 import { useCallback } from "react";
 
 import { BottomTabNavigation } from "./navigation";
-import { Cart, NewRivals, ProductDetails } from "./screens";
+import {
+  Cart,
+  Favorites,
+  Login,
+  NewRivals,
+  Orders,
+  ProductDetails,
+} from "./screens";
 
 const Stack = createNativeStackNavigator();
 
@@ -50,6 +57,21 @@ export default function App() {
         <Stack.Screen
           name="Product List"
           component={NewRivals}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Orders"
+          component={Orders}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Favorites"
+          component={Favorites}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
