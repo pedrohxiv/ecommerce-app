@@ -6,6 +6,7 @@ import NewRivals from "../screens/NewRivals";
 import Orders from "../screens/Orders";
 import ProductDetails from "../screens/ProductDetails";
 import Profile from "../screens/Profile";
+import Register from "../screens/Register";
 import Search from "../screens/Search";
 
 export {
@@ -17,5 +18,6 @@ export {
   Orders,
   ProductDetails,
   Profile,
+  Register,
   Search,
 };

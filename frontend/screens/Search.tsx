@@ -3,13 +3,13 @@ import { useState } from "react";
 import {
   FlatList,
   Image,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons, Feather } from "@expo/vector-icons";
+import { API_URL } from "@env";
 
 import { SearchTile } from "../components";
 import { COLORS, SIZES } from "../constants";
@@ -19,18 +19,12 @@ import styles from "./search.style";
 const Search = () => {
   const [searchKey, setSearchKey] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  console.log(searchResults);
 
-  const handleSearch = async () => {
-    try {
-      const response = await axios.get(
-        `https://44be-177-96-4-44.ngrok.io/api/products/search/${searchKey}`
-      );
-
-      setSearchResults(response.data);
-    } catch (error) {
-      console.error("Failed to get products", error);
-    }
+  const handleSearch = () => {
+    axios
+      .get(`${API_URL}api/products/search/${searchKey}`)
+      .then((response) => setSearchResults(response.data))
+      .catch((error) => console.error(error));
   };
 
   return (

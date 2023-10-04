@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     top: SIZES.large + 10,
   },
   cover: {
-    height: SIZES.height / 2.4,
+    height: SIZES.height / 3.4,
     width: SIZES.width - 60,
     resizeMode: "contain",
     marginBottom: SIZES.xxLarge,
@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
   },
   registration: {
     marginTop: 8,
+    marginBottom: 24,
     color: COLORS.primary,
     textAlign: "center",
   },

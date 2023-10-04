@@ -1,4 +1,5 @@
-import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 import {
   AntDesign,
@@ -13,6 +14,26 @@ import styles from "./profile.style";
 const Profile = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
   const [userLogin, setUserLogin] = useState(false);
+
+  useEffect(() => {
+    checkExistingUser();
+  }, []);
+
+  const checkExistingUser = async () => {
+    try {
+      const id = await AsyncStorage.getItem("id");
+      const currentUser = await AsyncStorage.getItem(`user${JSON.parse(id!)}`);
+
+      if (currentUser !== null) {
+        setUserData(JSON.parse(currentUser));
+        setUserLogin(true);
+      } else {
+        navigation.navigate("Login");
+      }
+    } catch (error) {
+      console.log("Error retieving the data: ", error);
+    }
+  };
 
   const clearCache = () => {
     Alert.alert(
@@ -38,8 +59,21 @@ const Profile = ({ navigation }) => {
 
   const logout = () => {
     Alert.alert("Logout", "Are you sure you want to logout?", [
-      { text: "Cancel", onPress: () => console.log("Cancel pressed") },
-      { text: "Continue", onPress: () => console.log("Continue pressed") },
+      { text: "Cancel" },
+      {
+        text: "Continue",
+        onPress: async () => {
+          try {
+            const id = await AsyncStorage.getItem("id");
+
+            await AsyncStorage.multiRemove([`user${JSON.parse(id!)}`, "id"]);
+
+            navigation.replace("Bottom Navigation");
+          } catch (error) {
+            console.log("Error loggin out the user: ", error);
+          }
+        },
+      },
     ]);
   };
 
@@ -67,7 +101,7 @@ const Profile = ({ navigation }) => {
           />
           <Text style={styles.name}>
             {userLogin === true
-              ? userData.name
+              ? userData.username
               : "Please login into your account"}
           </Text>
           {userLogin === false ? (
@@ -78,7 +112,7 @@ const Profile = ({ navigation }) => {
             </TouchableOpacity>
           ) : (
             <View style={styles.loginBtn}>
-              <Text style={styles.menuText}>pedro@gmail.com</Text>
+              <Text style={styles.menuText}>{userData.email}</Text>
             </View>
           )}
           {userLogin === false ? (

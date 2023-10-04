@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     zIndex: 999,
   },
   cartNumber: {
-    fontFamily: "reg",
+    fontFamily: "regular",
     fontWeight: "600",
     fontSize: 10,
     color: COLORS.lightWhite,
