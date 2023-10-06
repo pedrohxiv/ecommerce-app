@@ -3,23 +3,6 @@ import { StyleSheet } from "react-native";
 import { COLORS, SIZES } from "../../constants";
 
 const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-  },
-  welcomeTitle: {
-    fontFamily: "bold",
-    fontSize: SIZES.xxLarge - 5,
-    marginTop: SIZES.xSmall,
-    color: COLORS.black,
-    marginHorizontal: 12,
-  },
-  welcomeSubtitle: {
-    fontFamily: "bold",
-    fontSize: SIZES.xxLarge - 5,
-    marginTop: 0,
-    color: COLORS.primary,
-    marginHorizontal: 12,
-  },
   searchContainer: {
     flexDirection: "row",
     justifyContent: "center",
@@ -53,6 +36,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     alignItems: "center",
     justifyContent: "center",
+  },
+  searchImage: {
+    resizeMode: "contain",
+    width: SIZES.width -60,
+    height: SIZES.height -100,
+    opacity: 0.9,
   },
 });
 

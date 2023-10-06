@@ -1,12 +1,7 @@
-import mongoose, { type Schema } from "mongoose";
+import mongoose from "mongoose";
 
-interface Cart {
-  userId: string;
-  products: {
-    cartItem: Schema.Types.ObjectId;
-    quantity: number;
-  }[];
-}
+import { Cart } from "../types";
+
 const CartSchema = new mongoose.Schema<Cart>(
   {
     userId: { type: String, required: true },

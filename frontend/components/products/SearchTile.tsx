@@ -1,26 +1,17 @@
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { type NavigationProp, useNavigation } from "@react-navigation/native";
 
-import styles from "./searchTile.style";
+import styles from "./styles/searchTile.style";
+import type { Product, RootStackParamList } from "../../types";
 
-interface SearchTileProps {
-  item: {
-    title: string;
-    supplier: string;
-    price: string;
-    imageUrl: string;
-    description: string;
-    product_location: string;
-  };
-}
+const SearchTile: React.FC<{ item: Product }> = ({ item }) => {
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
 
-const SearchTile = ({ item }: SearchTileProps) => {
-  const navigation = useNavigation();
   return (
     <View>
       <TouchableOpacity
         style={styles.container}
-        onPress={() => navigation.navigate("Product Details", { item })}
+        onPress={() => navigation.navigate("ProductDetails", { item })}
       >
         <View style={styles.image}>
           <Image source={{ uri: item.imageUrl }} style={styles.productImg} />

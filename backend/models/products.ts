@@ -1,13 +1,6 @@
 import mongoose from "mongoose";
 
-interface Product {
-  title: string;
-  supplier: string;
-  price: string;
-  imageUrl: string;
-  description: string;
-  product_location: string;
-}
+import { Product } from "../types";
 
 const ProductSchema = new mongoose.Schema<Product>(
   {

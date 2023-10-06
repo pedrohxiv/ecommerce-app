@@ -6,13 +6,17 @@ import {
   MaterialCommunityIcons,
   SimpleLineIcons,
 } from "@expo/vector-icons";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { COLORS } from "../constants";
 
-import styles from "./profile.style";
+import styles from "./styles/profile.style";
+import type { RootStackParamList, User } from "../types";
 
-const Profile = ({ navigation }) => {
-  const [userData, setUserData] = useState(null);
+const Profile: React.FC<{
+  navigation: NativeStackNavigationProp<RootStackParamList, "Profile">;
+}> = ({ navigation }) => {
+  const [userData, setUserData] = useState<User | null>(null);
   const [userLogin, setUserLogin] = useState(false);
 
   useEffect(() => {
@@ -31,7 +35,7 @@ const Profile = ({ navigation }) => {
         navigation.navigate("Login");
       }
     } catch (error) {
-      console.log("Error retieving the data: ", error);
+      console.error("Error retieving the data: ", error);
     }
   };
 
@@ -39,10 +43,7 @@ const Profile = ({ navigation }) => {
     Alert.alert(
       "Clear Cache",
       "Are you sure you want to delete all saved data on your device?",
-      [
-        { text: "Cancel", onPress: () => console.log("Cancel pressed") },
-        { text: "Continue", onPress: () => console.log("Continue pressed") },
-      ]
+      [{ text: "Cancel" }, { text: "Continue" }]
     );
   };
 
@@ -50,10 +51,7 @@ const Profile = ({ navigation }) => {
     Alert.alert(
       "Delete Account",
       "Are you sure you want to delete your account? Your account will be PERMANENTLY deleted!",
-      [
-        { text: "Cancel", onPress: () => console.log("Cancel pressed") },
-        { text: "Continue", onPress: () => console.log("Continue pressed") },
-      ]
+      [{ text: "Cancel" }, { text: "Continue" }]
     );
   };
 
@@ -68,7 +66,7 @@ const Profile = ({ navigation }) => {
 
             await AsyncStorage.multiRemove([`user${JSON.parse(id!)}`, "id"]);
 
-            navigation.replace("Bottom Navigation");
+            navigation.replace("BottomNavigation");
           } catch (error) {
             console.log("Error loggin out the user: ", error);
           }
@@ -101,7 +99,7 @@ const Profile = ({ navigation }) => {
           />
           <Text style={styles.name}>
             {userLogin === true
-              ? userData.username
+              ? userData?.username
               : "Please login into your account"}
           </Text>
           {userLogin === false ? (
@@ -112,7 +110,7 @@ const Profile = ({ navigation }) => {
             </TouchableOpacity>
           ) : (
             <View style={styles.loginBtn}>
-              <Text style={styles.menuText}>{userData.email}</Text>
+              <Text style={styles.menuText}>{userData?.email}</Text>
             </View>
           )}
           {userLogin === false ? (

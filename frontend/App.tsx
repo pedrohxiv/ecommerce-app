@@ -41,7 +41,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Bottom Navigation"
+          name="BottomNavigation"
           component={BottomTabNavigation}
           options={{ headerShown: false }}
         />
@@ -51,12 +51,12 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Product Details"
+          name="ProductDetails"
           component={ProductDetails}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Product List"
+          name="ProductList"
           component={NewRivals}
           options={{ headerShown: false }}
         />

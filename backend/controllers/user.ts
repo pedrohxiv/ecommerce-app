@@ -15,7 +15,7 @@ async function remove(req: Request, res: Response) {
 
 async function getById(req: Request, res: Response) {
   try {
-    const user: any = await User.findById(req.params.id);
+    const user = await User.findById(req.params.id);
 
     if (!user) {
       return res.status(401).json({ message: "User not found" });

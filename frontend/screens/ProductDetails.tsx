@@ -1,21 +1,27 @@
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { RouteProp, useRoute } from "@react-navigation/native";
 import {
   Ionicons,
   SimpleLineIcons,
   MaterialCommunityIcons,
   Fontisto,
 } from "@expo/vector-icons";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { COLORS, SIZES } from "../constants";
+import type { Product, RootStackParamList } from "../types";
 
-import styles from "./productDetails.style";
+import styles from "./styles/productDetails.style";
+import { API_URL } from "@env";
 
-const ProductDetails = ({ navigation }: { navigation: any }) => {
+const ProductDetails: React.FC<{
+  navigation: NativeStackNavigationProp<RootStackParamList, "ProductDetails">;
+}> = ({ navigation }) => {
+  const { params } = useRoute<RouteProp<{ Detail: { item: Product } }>>();
   const [count, setCount] = useState(1);
-  const route = useRoute();
-  const { item } = route.params;
 
   const favorited = true;
 
@@ -27,6 +33,23 @@ const ProductDetails = ({ navigation }: { navigation: any }) => {
 
   const handleIncrement = () => {
     setCount(count + 1);
+  };
+
+  const handleAddItemToCart = async () => {
+    const userId = await AsyncStorage.getItem("id");
+
+    if (userId === null) {
+      return navigation.navigate("Login");
+    }
+
+    axios
+      .post(`${API_URL}api/cart`, {
+        userId: userId?.replace(/^"(.*)"$/, "$1"),
+        cartItem: params.item,
+        quantity: count,
+      })
+      .then((response) => navigation.navigate('Cart'))
+      .catch((error) => console.error(error));
   };
 
   return (
@@ -45,15 +68,15 @@ const ProductDetails = ({ navigation }: { navigation: any }) => {
       </View>
       <Image
         source={{
-          uri: item.imageUrl,
+          uri: params.item.imageUrl,
         }}
         style={styles.image}
       />
       <View style={styles.details}>
         <View style={styles.titleRow}>
-          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.title}>{params.item.title}</Text>
           <View style={styles.priceWrapper}>
-            <Text style={styles.price}>${item.price}</Text>
+            <Text style={styles.price}>${params.item.price}</Text>
           </View>
         </View>
         <View style={styles.ratingRow}>
@@ -79,13 +102,15 @@ const ProductDetails = ({ navigation }: { navigation: any }) => {
         </View>
         <View style={styles.descriptionWrapper}>
           <Text style={styles.descriptionTitle}>Description</Text>
-          <Text style={styles.descriptionText}>{item.description}</Text>
+          <Text style={styles.descriptionText}>{params.item.description}</Text>
         </View>
         <View style={{ marginBottom: SIZES.small }}>
           <View style={styles.location}>
             <View style={{ flexDirection: "row" }}>
               <Ionicons name="location-outline" size={20} />
-              <Text style={{ marginLeft: 10 }}>{item.product_location}</Text>
+              <Text style={{ marginLeft: 10 }}>
+                {params.item.product_location}
+              </Text>
             </View>
             <View style={{ flexDirection: "row" }}>
               <MaterialCommunityIcons name="truck-delivery-outline" size={20} />
@@ -94,10 +119,10 @@ const ProductDetails = ({ navigation }: { navigation: any }) => {
           </View>
         </View>
         <View style={styles.cartRow}>
-          <TouchableOpacity onPress={() => {}} style={styles.cartBtn}>
+          <TouchableOpacity onPress={handleAddItemToCart} style={styles.cartBtn}>
             <Text style={styles.cartText}>BUY NOW</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {}} style={styles.addCart}>
+          <TouchableOpacity onPress={() => navigation.navigate('Cart')} style={styles.addCart}>
             <Fontisto name="shopping-bag" size={22} color={COLORS.lightWhite} />
           </TouchableOpacity>
         </View>

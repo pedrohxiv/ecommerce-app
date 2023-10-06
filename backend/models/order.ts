@@ -1,14 +1,6 @@
-import mongoose, { type Schema } from "mongoose";
+import mongoose from "mongoose";
 
-interface Order {
-  userId: string;
-  customerId: string;
-  productId: Schema.Types.ObjectId;
-  quantity: number;
-  total: number;
-  delivery_status: string;
-  payment_status: string;
-}
+import { Order } from "../types";
 
 const OrderSchema = new mongoose.Schema<Order>(
   {

@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { COLORS, SIZES } from "../constants";
+import { COLORS, SIZES } from "../../constants";
 
 const styles = StyleSheet.create({
   backBtn: {
@@ -22,15 +22,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: SIZES.xxLarge,
   },
-  btn: (backgroundColor) => ({
+  btnValid: {
     height: 50,
     width: "100%",
     marginVertical: 20,
-    backgroundColor: backgroundColor,
+    backgroundColor: COLORS.gray,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 12,
-  }),
+  },
+  btnInvalid: {
+    height: 50,
+    width: "100%",
+    marginVertical: 20,
+    backgroundColor: COLORS.primary,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 12,
+  },
   btnTxt: {
     fontFamily: "bold",
     color: COLORS.white,
@@ -46,8 +55,8 @@ const styles = StyleSheet.create({
     marginEnd: 5,
     textAlign: "right",
   },
-  inputWrapper: (borderColor) => ({
-    borderColor: borderColor,
+  inputWrapperTouched: {
+    borderColor: COLORS.secondary,
     backgroundColor: COLORS.lightWhite,
     borderWidth: 1,
     height: 50,
@@ -55,7 +64,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 15,
     alignItems: "center",
-  }),
+  },
+  inputWrapper: {
+    borderColor: COLORS.offwhite,
+    backgroundColor: COLORS.lightWhite,
+    borderWidth: 1,
+    height: 50,
+    borderRadius: 12,
+    flexDirection: "row",
+    paddingHorizontal: 15,
+    alignItems: "center",
+  },
   icon: {
     marginRight: 10,
   },

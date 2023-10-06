@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-import styles from "./order.style";
+import styles from "./styles/order.style";
 
 const Orders = () => {
   return (

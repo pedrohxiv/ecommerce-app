@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   Alert,
   Image,
+  type ImageStyle,
   SafeAreaView,
   ScrollView,
   Text,
@@ -16,23 +17,26 @@ import {
 import { Formik } from "formik";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { API_URL } from "@env";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { COLORS } from "../constants";
+import type { RootStackParamList, User } from "../types";
 
-import styles from "./login.style";
+import styles from "./styles/login.style";
 
-const Login = ({ navigation }) => {
+const Login: React.FC<{
+  navigation: NativeStackNavigationProp<RootStackParamList, "Login">;
+}> = ({ navigation }) => {
   const [loader, setLoader] = useState(false);
-  const [responseData, setResponseData] = useState(null);
   const [obsecureText, setObsecureText] = useState(false);
 
   const invalidForm = () => {
     Alert.alert("Invalid Form", "Please provide all required fields", [
-      { text: "OK", onPress: () => console.log("OK pressed") },
+      { text: "OK" },
     ]);
   };
 
-  const login = async (values: any) => {
+  const login = async (values: { email: string; password: string }) => {
     try {
       setLoader(true);
 
@@ -41,26 +45,24 @@ const Login = ({ navigation }) => {
       if (response.status === 200) {
         setLoader(false);
 
-        setResponseData(response.data);
-
         await AsyncStorage.setItem(
-          `user${responseData._id}`,
-          JSON.stringify(responseData)
+          `user${response.data._id}`,
+          JSON.stringify(response.data)
         );
-        await AsyncStorage.setItem("id", JSON.stringify(responseData._id));
+        await AsyncStorage.setItem("id", JSON.stringify(response.data._id));
 
-        navigation.replace("Bottom Navigation");
+        navigation.replace("BottomNavigation");
       } else {
         Alert.alert("Error Logging in", "Please provide valid credentials", [
-          { text: "OK", onPress: () => console.log("OK pressed") },
+          { text: "OK" },
         ]);
       }
-    } catch (error: any) {
-      console.log(error);
+    } catch (error) {
+      console.error(error);
       Alert.alert(
         "Error",
         "Oops, Error logging in try again with correct credentials",
-        [{ text: "OK", onPress: () => console.log("OK pressed") }]
+        [{ text: "OK" }]
       );
     } finally {
       setLoader(false);
@@ -79,7 +81,7 @@ const Login = ({ navigation }) => {
           </TouchableOpacity>
           <Image
             source={require("../assets/images/bk.png")}
-            style={styles.cover}
+            style={styles.cover as ImageStyle}
           />
           <Text style={styles.title}>Unlimited Luxurious Furniture</Text>
           <Formik
@@ -96,7 +98,6 @@ const Login = ({ navigation }) => {
           >
             {({
               errors,
-              handleBlur,
               handleChange,
               handleSubmit,
               isValid,
@@ -108,9 +109,11 @@ const Login = ({ navigation }) => {
                 <View style={styles.wrapper}>
                   <Text style={styles.label}>Email</Text>
                   <View
-                    style={styles.inputWrapper(
-                      touched.email ? COLORS.secondary : COLORS.offwhite
-                    )}
+                    style={
+                      touched.email
+                        ? styles.inputWrapperTouched
+                        : styles.inputWrapper
+                    }
                   >
                     <MaterialCommunityIcons
                       name="email-outline"
@@ -121,7 +124,7 @@ const Login = ({ navigation }) => {
                     <TextInput
                       placeholder="Enter email"
                       onFocus={() => setFieldTouched("email")}
-                      onBlur={() => setFieldTouched("email", "")}
+                      onBlur={() => setFieldTouched("email")}
                       value={values.email}
                       onChangeText={handleChange("email")}
                       autoCapitalize="none"
@@ -136,9 +139,11 @@ const Login = ({ navigation }) => {
                 <View style={styles.wrapper}>
                   <Text style={styles.label}>Password</Text>
                   <View
-                    style={styles.inputWrapper(
-                      touched.password ? COLORS.secondary : COLORS.offwhite
-                    )}
+                    style={
+                      touched.password
+                        ? styles.inputWrapperTouched
+                        : styles.inputWrapper
+                    }
                   >
                     <MaterialCommunityIcons
                       name="lock-outline"
@@ -150,7 +155,7 @@ const Login = ({ navigation }) => {
                       secureTextEntry={!obsecureText}
                       placeholder="Enter password"
                       onFocus={() => setFieldTouched("password")}
-                      onBlur={() => setFieldTouched("password", "")}
+                      onBlur={() => setFieldTouched("password")}
                       value={values.password}
                       onChangeText={handleChange("password")}
                       autoCapitalize="none"
@@ -172,11 +177,11 @@ const Login = ({ navigation }) => {
                   )}
                 </View>
                 <TouchableOpacity
-                  style={styles.btn(
-                    isValid === false ? COLORS.gray : COLORS.primary
-                  )}
+                  style={
+                    isValid === false ? styles.btnValid : styles.btnInvalid
+                  }
                   disabled={isValid === false || loader === true}
-                  onPress={isValid ? handleSubmit : invalidForm}
+                  onPress={isValid ? () => handleSubmit() : () => invalidForm()}
                 >
                   {loader === true ? (
                     <ActivityIndicator color={COLORS.white} />

@@ -1,3 +1,4 @@
+import CartTile from "./cart/CartTile";
 import Carousel from "./home/Carousel";
 import Headings from "./home/Headings";
 import Welcome from "./home/Welcome";
@@ -7,6 +8,7 @@ import ProductRow from "./products/ProductRow";
 import SearchTile from "./products/SearchTile";
 
 export {
+  CartTile,
   Carousel,
   Headings,
   ProductCardView,

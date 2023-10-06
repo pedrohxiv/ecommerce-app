@@ -27,7 +27,7 @@ async function create(req: Request, res: Response) {
 
 async function login(req: Request, res: Response) {
   try {
-    const user: any = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email });
 
     if (!user) {
       return res
@@ -46,9 +46,13 @@ async function login(req: Request, res: Response) {
         .json({ message: "Wrong password, provide a valid password" });
     }
 
-    const userToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
-      expiresIn: "7d",
-    });
+    const userToken = jwt.sign(
+      { id: user._id.toString() },
+      process.env.JWT_SECRET!,
+      {
+        expiresIn: "7d",
+      }
+    );
 
     const { password, __v, createdAt, updatedAt, ...userData } = user._doc;
 

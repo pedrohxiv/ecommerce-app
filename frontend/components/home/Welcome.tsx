@@ -1,12 +1,14 @@
 import { View, Text, TouchableOpacity, TextInput } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { type NavigationProp, useNavigation } from "@react-navigation/native";
 import { Feather, Ionicons } from "@expo/vector-icons";
 
-import styles from "./welcome.style";
 import { COLORS, SIZES } from "../../constants";
+import type { RootStackParamList } from "../../types";
+
+import styles from "./styles/welcome.style";
 
 const Welcome = () => {
-  const navigation = useNavigation();
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
 
   return (
     <View>

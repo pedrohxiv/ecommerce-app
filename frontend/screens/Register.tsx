@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   Alert,
   Image,
+  type ImageStyle,
   SafeAreaView,
   ScrollView,
   Text,
@@ -15,12 +16,16 @@ import {
 import { Formik } from "formik";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { API_URL } from "@env";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { COLORS } from "../constants";
+import type { RootStackParamList } from "../types";
 
-import styles from "./register.style";
+import styles from "./styles/register.style";
 
-const Register = ({ navigation }) => {
+const Register: React.FC<{
+  navigation: NativeStackNavigationProp<RootStackParamList, "Register">;
+}> = ({ navigation }) => {
   const [loader, setLoader] = useState(false);
   const [obsecureText, setObsecureText] = useState(false);
 
@@ -30,7 +35,12 @@ const Register = ({ navigation }) => {
     ]);
   };
 
-  const register = async (values: any) => {
+  const register = async (values: {
+    username: string;
+    location: string;
+    email: string;
+    password: string;
+  }) => {
     try {
       setLoader(true);
 
@@ -45,7 +55,7 @@ const Register = ({ navigation }) => {
           { text: "OK" },
         ]);
       }
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
       Alert.alert(
         "Error",
@@ -69,7 +79,7 @@ const Register = ({ navigation }) => {
           </TouchableOpacity>
           <Image
             source={require("../assets/images/bk.png")}
-            style={styles.cover}
+            style={styles.cover as ImageStyle}
           />
           <Text style={styles.title}>Unlimited Luxurious Furniture</Text>
           <Formik
@@ -97,7 +107,6 @@ const Register = ({ navigation }) => {
           >
             {({
               errors,
-              handleBlur,
               handleChange,
               handleSubmit,
               isValid,
@@ -109,9 +118,11 @@ const Register = ({ navigation }) => {
                 <View style={styles.wrapper}>
                   <Text style={styles.label}>Username</Text>
                   <View
-                    style={styles.inputWrapper(
-                      touched.username ? COLORS.secondary : COLORS.offwhite
-                    )}
+                    style={
+                      touched.username
+                        ? styles.inputWrapperTouched
+                        : styles.inputWrapper
+                    }
                   >
                     <Ionicons
                       name="person-outline"
@@ -122,7 +133,7 @@ const Register = ({ navigation }) => {
                     <TextInput
                       placeholder="Enter username"
                       onFocus={() => setFieldTouched("username")}
-                      onBlur={() => setFieldTouched("username", "")}
+                      onBlur={() => setFieldTouched("username")}
                       value={values.username}
                       onChangeText={handleChange("username")}
                       autoCapitalize="none"
@@ -137,9 +148,11 @@ const Register = ({ navigation }) => {
                 <View style={styles.wrapper}>
                   <Text style={styles.label}>Location</Text>
                   <View
-                    style={styles.inputWrapper(
-                      touched.location ? COLORS.secondary : COLORS.offwhite
-                    )}
+                    style={
+                      touched.location
+                        ? styles.inputWrapperTouched
+                        : styles.inputWrapper
+                    }
                   >
                     <Ionicons
                       name="location-outline"
@@ -150,7 +163,7 @@ const Register = ({ navigation }) => {
                     <TextInput
                       placeholder="Enter location"
                       onFocus={() => setFieldTouched("location")}
-                      onBlur={() => setFieldTouched("location", "")}
+                      onBlur={() => setFieldTouched("location")}
                       value={values.location}
                       onChangeText={handleChange("location")}
                       autoCapitalize="none"
@@ -165,9 +178,11 @@ const Register = ({ navigation }) => {
                 <View style={styles.wrapper}>
                   <Text style={styles.label}>Email</Text>
                   <View
-                    style={styles.inputWrapper(
-                      touched.email ? COLORS.secondary : COLORS.offwhite
-                    )}
+                    style={
+                      touched.email
+                        ? styles.inputWrapperTouched
+                        : styles.inputWrapper
+                    }
                   >
                     <MaterialCommunityIcons
                       name="email-outline"
@@ -178,7 +193,7 @@ const Register = ({ navigation }) => {
                     <TextInput
                       placeholder="Enter email"
                       onFocus={() => setFieldTouched("email")}
-                      onBlur={() => setFieldTouched("email", "")}
+                      onBlur={() => setFieldTouched("email")}
                       value={values.email}
                       onChangeText={handleChange("email")}
                       autoCapitalize="none"
@@ -193,9 +208,11 @@ const Register = ({ navigation }) => {
                 <View style={styles.wrapper}>
                   <Text style={styles.label}>Password</Text>
                   <View
-                    style={styles.inputWrapper(
-                      touched.password ? COLORS.secondary : COLORS.offwhite
-                    )}
+                    style={
+                      touched.password
+                        ? styles.inputWrapperTouched
+                        : styles.inputWrapper
+                    }
                   >
                     <MaterialCommunityIcons
                       name="lock-outline"
@@ -207,7 +224,7 @@ const Register = ({ navigation }) => {
                       secureTextEntry={!obsecureText}
                       placeholder="Enter password"
                       onFocus={() => setFieldTouched("password")}
-                      onBlur={() => setFieldTouched("password", "")}
+                      onBlur={() => setFieldTouched("password")}
                       value={values.password}
                       onChangeText={handleChange("password")}
                       autoCapitalize="none"
@@ -229,11 +246,11 @@ const Register = ({ navigation }) => {
                   )}
                 </View>
                 <TouchableOpacity
-                  style={styles.btn(
-                    isValid === false ? COLORS.gray : COLORS.primary
-                  )}
+                  style={
+                    isValid === false ? styles.btnInvalid : styles.btnValid
+                  }
                   disabled={isValid === false}
-                  onPress={isValid ? handleSubmit : invalidForm}
+                  onPress={isValid ? () => handleSubmit() : () => invalidForm()}
                 >
                   {loader === true ? (
                     <ActivityIndicator color={COLORS.white} />

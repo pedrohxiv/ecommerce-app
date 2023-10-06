@@ -6,7 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { ProductList } from "../components";
 import { COLORS } from "../constants";
 
-import styles from "./newRivals.style";
+import styles from "./styles/newRivals.style";
 
 const NewRivals = () => {
   const navigation = useNavigation();

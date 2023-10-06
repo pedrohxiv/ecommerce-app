@@ -4,7 +4,7 @@ import { SliderBox } from "react-native-image-slider-box";
 
 import { COLORS } from "../../constants";
 
-import styles from "./carousel.style";
+import styles from "./styles/carousel.style";
 
 const Carousel = () => {
   const slides = [

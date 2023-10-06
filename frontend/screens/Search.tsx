@@ -14,11 +14,12 @@ import { API_URL } from "@env";
 import { SearchTile } from "../components";
 import { COLORS, SIZES } from "../constants";
 
-import styles from "./search.style";
+import styles from "./styles/search.style";
+import type { Product } from "../types";
 
 const Search = () => {
   const [searchKey, setSearchKey] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
 
   const handleSearch = () => {
     axios
@@ -43,6 +44,7 @@ const Search = () => {
             value={searchKey}
             onChangeText={setSearchKey}
             placeholder="What are you looking for"
+            autoFocus={true}
           />
         </View>
         <View>
@@ -61,8 +63,9 @@ const Search = () => {
       ) : (
         <FlatList
           data={searchResults}
-          keyExtractor={(item: { _id: string }) => item._id}
-          renderItem={({ item }) => <SearchTile item={item} />}
+          renderItem={({ item }) => (
+            <SearchTile key={item._id} item={item} />
+          )}
           style={{ marginHorizontal: 12 }}
         />
       )}

@@ -5,13 +5,13 @@ import { API_URL } from "@env";
 
 import ProductCardView from "./ProductCardView";
 import { COLORS, SIZES } from "../../constants";
+import type { Product } from "../../types";
 
-import styles from "./productRow.style";
+import styles from "./styles/productRow.style";
 
 const ProductRow = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Product[]>([]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -19,16 +19,14 @@ const ProductRow = () => {
     axios
       .get(`${API_URL}api/products`)
       .then((response) => setData(response.data))
-      .catch((error) => setError(error))
+      .catch((error) => console.error(error))
       .finally(() => setIsLoading(false));
-  }, [API_URL]);
+  }, []);
 
   return (
     <View style={styles.container}>
       {isLoading ? (
         <ActivityIndicator size={SIZES.xxLarge} color={COLORS.primary} />
-      ) : error ? (
-        <Text>Something went wrong</Text>
       ) : data && data.length > 0 ? (
         <FlatList
           data={data}
