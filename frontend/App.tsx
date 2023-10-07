@@ -71,11 +71,12 @@ export default function App() {
           component={Orders}
           options={{ headerShown: false }}
         />
+        */}
         <Stack.Screen
           name="Favorites"
           component={Favorites}
           options={{ headerShown: false }}
-        />*/}
+        />
         <Stack.Screen
           name="Register"
           component={Register}

@@ -3,12 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  Ionicons,
-  MaterialCommunityIcons,
-  Feather,
-  Fontisto,
-} from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { API_URL } from "@env";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -34,29 +29,13 @@ const Cart: React.FC<{
     const fetchCart = async () => {
       const userId = await AsyncStorage.getItem("id");
 
+      if (!userId) {
+        return navigation.replace("Login");
+      }
+
       axios
         .get(`${API_URL}api/cart/find/${userId?.slice(1, -1)}`)
-        .then((response) => {
-          const consolidatedData = response.data.map((item) => {
-            const productsMap = new Map();
-
-            item.products.forEach((product) => {
-              const existingProduct = productsMap.get(product.cartItem._id);
-              if (existingProduct) {
-                existingProduct.quantity += product.quantity;
-              } else {
-                productsMap.set(product.cartItem._id, { ...product });
-              }
-            });
-
-            return {
-              ...item,
-              products: [...productsMap.values()],
-            };
-          });
-
-          setCartItems(consolidatedData[0].products);
-        })
+        .then((response) => setCartItems(response.data[0].products))
         .catch((error) => console.error(error));
     };
 

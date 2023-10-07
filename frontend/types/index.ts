@@ -18,6 +18,18 @@ export type User = {
   location: string;
 };
 
+export type Cart = {
+  _id: string;
+  cartItem: {
+    _id: string;
+    imageUrl: string;
+    price: string;
+    supplier: string;
+    title: string;
+  };
+  quantity: number;
+};
+
 export type RootStackParamList = {
   BottomNavigation: undefined;
   Home: undefined;

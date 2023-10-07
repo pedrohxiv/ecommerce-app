@@ -1,3 +1,4 @@
+import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
@@ -7,6 +8,7 @@ import {
   SimpleLineIcons,
 } from "@expo/vector-icons";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { API_URL } from "@env";
 
 import { COLORS } from "../constants";
 
@@ -43,7 +45,22 @@ const Profile: React.FC<{
     Alert.alert(
       "Clear Cache",
       "Are you sure you want to delete all saved data on your device?",
-      [{ text: "Cancel" }, { text: "Continue" }]
+      [
+        { text: "Cancel" },
+        {
+          text: "Continue",
+          onPress: async () => {
+            const userId = await AsyncStorage.getItem("id");
+
+            axios
+              .delete(`${API_URL}api/cart/clear/${userId?.slice(1, -1)}`)
+              .then((_response) => console.log("Your cart is clean"))
+              .catch((error) => console.error(error));
+
+            await AsyncStorage.removeItem(`favorites${JSON.parse(userId!)}`);
+          },
+        },
+      ]
     );
   };
 
@@ -51,7 +68,19 @@ const Profile: React.FC<{
     Alert.alert(
       "Delete Account",
       "Are you sure you want to delete your account? Your account will be PERMANENTLY deleted!",
-      [{ text: "Cancel" }, { text: "Continue" }]
+      [
+        { text: "Cancel" },
+        {
+          text: "Continue",
+          onPress: async () => {
+            const userId = await AsyncStorage.getItem("id");
+
+            axios.delete(`${API_URL}api/users/${JSON.parse(userId!)}`);
+
+            navigation.navigate("Login");
+          },
+        },
+      ]
     );
   };
 

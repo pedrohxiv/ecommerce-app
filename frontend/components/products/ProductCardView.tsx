@@ -1,5 +1,6 @@
-import { Image, Text, TouchableOpacity, View } from "react-native";
 import axios from "axios";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
@@ -12,13 +13,16 @@ import styles from "./styles/productCardView.style";
 
 const ProductCardView: React.FC<{ item: Product }> = ({ item }) => {
   const navigation: NavigationProp<RootStackParamList> = useNavigation();
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   const handleAddItemToCart = async () => {
     const userId = await AsyncStorage.getItem("id");
 
-    if (userId === null) {
+    if (!userId) {
       return navigation.navigate("Login");
     }
+
+    setIsAddingToCart(true);
 
     axios
       .post(`${API_URL}api/cart`, {
@@ -27,7 +31,8 @@ const ProductCardView: React.FC<{ item: Product }> = ({ item }) => {
         quantity: 1,
       })
       .then()
-      .catch((error) => console.error(error));
+      .catch((error) => console.error(error))
+      .finally(() => setIsAddingToCart(false));
   };
 
   return (
@@ -50,10 +55,22 @@ const ProductCardView: React.FC<{ item: Product }> = ({ item }) => {
           <Text style={styles.supplier} numberOfLines={1}>
             {item.supplier}
           </Text>
-          <Text style={styles.price}>${item.price}</Text>
+          <Text style={styles.price}>{item.price}</Text>
         </View>
-        <TouchableOpacity style={styles.addBtn} onPress={handleAddItemToCart}>
-          <Ionicons name="add-circle" size={35} color={COLORS.primary} />
+        <TouchableOpacity
+          style={styles.addBtn}
+          onPress={handleAddItemToCart}
+          disabled={isAddingToCart}
+        >
+          {!isAddingToCart ? (
+            <Ionicons name="add-circle" size={35} color={COLORS.primary} />
+          ) : (
+            <Ionicons
+              name="checkmark-circle"
+              size={35}
+              color={COLORS.primary}
+            />
+          )}
         </TouchableOpacity>
       </View>
     </TouchableOpacity>

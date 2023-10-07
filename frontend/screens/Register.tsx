@@ -49,7 +49,7 @@ const Register: React.FC<{
       if (response.status === 201) {
         setLoader(false);
 
-        navigation.replace("Login");
+        navigation.push("Login");
       } else {
         Alert.alert("Error signing up", "Please provide valid credentials", [
           { text: "OK" },
@@ -247,9 +247,9 @@ const Register: React.FC<{
                 </View>
                 <TouchableOpacity
                   style={
-                    isValid === false ? styles.btnInvalid : styles.btnValid
+                    isValid === false ? styles.btnValid : styles.btnInvalid
                   }
-                  disabled={isValid === false}
+                  disabled={isValid === false || loader === true}
                   onPress={isValid ? () => handleSubmit() : () => invalidForm()}
                 >
                   {loader === true ? (

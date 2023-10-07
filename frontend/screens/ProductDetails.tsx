@@ -1,6 +1,6 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import {
@@ -22,8 +22,30 @@ const ProductDetails: React.FC<{
 }> = ({ navigation }) => {
   const { params } = useRoute<RouteProp<{ Detail: { item: Product } }>>();
   const [count, setCount] = useState(1);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [favorited, setFavorited] = useState(false);
 
-  const favorited = true;
+  useEffect(() => {
+    const checkFavoriteStatus = async () => {
+      try {
+        const userId = await AsyncStorage.getItem("id");
+        const favoritesKey = `favorites${JSON.parse(userId!)}`;
+        const favorites = await AsyncStorage.getItem(favoritesKey);
+
+        if (favorites) {
+          const parsedFavorites = JSON.parse(favorites);
+          const isFavorited = parsedFavorites.includes(params.item._id);
+          setFavorited(isFavorited);
+        } else {
+          setFavorited(false);
+        }
+      } catch (error) {
+        console.error("Erro ao verificar favoritos:", error);
+      }
+    };
+
+    checkFavoriteStatus();
+  }, []);
 
   const handleDecrement = () => {
     if (count > 1) {
@@ -36,6 +58,8 @@ const ProductDetails: React.FC<{
   };
 
   const handleAddItemToCart = async () => {
+    setIsAddingToCart(true);
+
     const userId = await AsyncStorage.getItem("id");
 
     if (userId === null) {
@@ -48,8 +72,49 @@ const ProductDetails: React.FC<{
         cartItem: params.item,
         quantity: count,
       })
-      .then((response) => navigation.navigate('Cart'))
-      .catch((error) => console.error(error));
+      .then((_response) => navigation.navigate("Cart"))
+      .catch((error) => console.error(error))
+      .finally(() => setIsAddingToCart(false));
+  };
+
+  const handleFavorite = async () => {
+    try {
+      const userId = await AsyncStorage.getItem("id");
+
+      if (!userId) {
+        return navigation.replace("Login");
+      }
+
+      const favoritesKey = `favorites${JSON.parse(userId!)}`;
+      const favorites = await AsyncStorage.getItem(favoritesKey);
+
+      let updatedFavorites = [];
+
+      if (favorites) {
+        updatedFavorites = JSON.parse(favorites);
+      }
+
+      if (favorited) {
+        const index = updatedFavorites.indexOf(params.item._id);
+        if (index !== -1) {
+          updatedFavorites.splice(index, 1);
+          await AsyncStorage.setItem(
+            favoritesKey,
+            JSON.stringify(updatedFavorites)
+          );
+        }
+        setFavorited(false);
+      } else {
+        updatedFavorites.push(params.item._id);
+        await AsyncStorage.setItem(
+          favoritesKey,
+          JSON.stringify(updatedFavorites)
+        );
+        setFavorited(true);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -58,7 +123,7 @@ const ProductDetails: React.FC<{
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={30} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={handleFavorite}>
           <Ionicons
             name={favorited ? "heart" : "heart-outline"}
             size={30}
@@ -76,7 +141,7 @@ const ProductDetails: React.FC<{
         <View style={styles.titleRow}>
           <Text style={styles.title}>{params.item.title}</Text>
           <View style={styles.priceWrapper}>
-            <Text style={styles.price}>${params.item.price}</Text>
+            <Text style={styles.price}>{params.item.price}</Text>
           </View>
         </View>
         <View style={styles.ratingRow}>
@@ -119,10 +184,17 @@ const ProductDetails: React.FC<{
           </View>
         </View>
         <View style={styles.cartRow}>
-          <TouchableOpacity onPress={handleAddItemToCart} style={styles.cartBtn}>
+          <TouchableOpacity
+            onPress={handleAddItemToCart}
+            style={styles.cartBtn}
+            disabled={isAddingToCart}
+          >
             <Text style={styles.cartText}>BUY NOW</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Cart')} style={styles.addCart}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Cart")}
+            style={styles.addCart}
+          >
             <Fontisto name="shopping-bag" size={22} color={COLORS.lightWhite} />
           </TouchableOpacity>
         </View>

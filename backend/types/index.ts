@@ -3,6 +3,7 @@ import type { Schema } from "mongoose";
 export type Cart = {
   userId: string;
   products: {
+    _id: string;
     cartItem: Schema.Types.ObjectId;
     quantity: number;
   }[];

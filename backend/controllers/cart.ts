@@ -10,12 +10,13 @@ async function add(req: Request, res: Response) {
 
     if (cart) {
       const existingProduct = cart.products.find(
-        (product) => product.cartItem.toString() === cartItem
+        (product) => product.cartItem.toString() === cartItem._id.toString()
       );
 
       if (existingProduct) {
-        existingProduct.quantity += 1;
+        existingProduct.quantity += quantity;
       } else {
+        // @ts-ignore
         cart.products.push({ cartItem, quantity });
       }
 
@@ -52,20 +53,44 @@ async function get(req: Request, res: Response) {
 
 async function remove(req: Request, res: Response) {
   try {
-    const updatedCart = await Cart.findOneAndUpdate(
-      { "products._id": req.params.cartItemId },
-      { $pull: { products: { _id: req.params.cartItemId } } },
-      { new: true }
-    );
+    const cartItem = await Cart.findOne({
+      "products._id": req.params.cartItemId,
+    }).populate("products.cartItem");
 
-    if (!updatedCart) {
+    if (!cartItem) {
       return res.status(404).json({ message: "Cart item not found" });
     }
 
-    return res.status(200).json(updatedCart);
+    cartItem.products = cartItem.products.filter(
+      (product) => product._id.toString() !== req.params.cartItemId
+    );
+
+    await cartItem.save();
+
+    return res.status(200).json(cartItem);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Failed to get the product" });
+    return res
+      .status(500)
+      .json({ message: "Failed to remove the product from the cart" });
+  }
+}
+
+async function removeAll(req: Request, res: Response) {
+  try {
+    const cart: any = await Cart.findOne({ userId: req.params.id }).populate(
+      "products.cartItem",
+      "_id title supplier price imageUrl"
+    );
+
+    cart.products = [];
+
+    await cart.save();
+
+    return res.status(200).json(cart);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Failed to get the cart" });
   }
 }
 
@@ -108,4 +133,4 @@ async function decrement(req: Request, res: Response) {
   }
 }
 
-export { add, get, remove, decrement };
+export { add, get, remove, removeAll, decrement };

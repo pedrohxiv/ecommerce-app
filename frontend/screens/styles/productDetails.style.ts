@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     marginHorizontal: SIZES.large,
   },
   quantityText: {
-    color: COLORS.gray2,
+    color: COLORS.black,
     fontFamily: "medium",
     paddingHorizontal: SIZES.xSmall,
   },
