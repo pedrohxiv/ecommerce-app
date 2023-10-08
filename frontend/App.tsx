@@ -1,5 +1,10 @@
+import { STRIPE_PUBLIC_KEY } from "@env";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import { StripeProvider } from "@stripe/stripe-react-native";
+
 import {
   useFonts,
   Poppins_300Light,
@@ -10,6 +15,7 @@ import {
   Poppins_800ExtraBold,
 } from "@expo-google-fonts/poppins";
 
+import { CartProvider } from "./contexts";
 import { BottomTabNavigation } from "./navigation";
 import {
   Cart,
@@ -38,51 +44,53 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="BottomNavigation"
-          component={BottomTabNavigation}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Cart"
-          component={Cart}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="ProductDetails"
-          component={ProductDetails}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="ProductList"
-          component={NewRivals}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{ headerShown: false }}
-        />
-        {/*
-        <Stack.Screen
-          name="Orders"
-          component={Orders}
-          options={{ headerShown: false }}
-        />
-        */}
-        <Stack.Screen
-          name="Favorites"
-          component={Favorites}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Register"
-          component={Register}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <StripeProvider publishableKey={STRIPE_PUBLIC_KEY}>
+      <CartProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="BottomNavigation"
+              component={BottomTabNavigation}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Cart"
+              component={Cart}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ProductDetails"
+              component={ProductDetails}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ProductList"
+              component={NewRivals}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Orders"
+              component={Orders}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Favorites"
+              component={Favorites}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Register"
+              component={Register}
+              options={{ headerShown: false }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </CartProvider>
+    </StripeProvider>
   );
 }

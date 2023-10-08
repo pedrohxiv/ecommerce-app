@@ -1,8 +1,10 @@
-import { View, Text, TouchableOpacity, TextInput } from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
+
 import { Feather, Ionicons } from "@expo/vector-icons";
 
 import { COLORS, SIZES } from "../../constants";
+
 import type { RootStackParamList } from "../../types";
 
 import styles from "./styles/welcome.style";

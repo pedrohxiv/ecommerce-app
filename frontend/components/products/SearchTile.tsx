@@ -1,10 +1,11 @@
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
 
-import styles from "./styles/searchTile.style";
-import type { Product, RootStackParamList } from "../../types";
+import type { IProduct, RootStackParamList } from "../../types";
 
-const SearchTile: React.FC<{ item: Product }> = ({ item }) => {
+import styles from "./styles/searchTile.style";
+
+const SearchTile: React.FC<{ item: IProduct }> = ({ item }) => {
   const navigation: NavigationProp<RootStackParamList> = useNavigation();
 
   return (

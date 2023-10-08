@@ -1,21 +1,32 @@
 import axios from "axios";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import { type NavigationProp, useNavigation } from "@react-navigation/native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+
 import { API_URL } from "@env";
 
+import { Dispatch, SetStateAction } from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
 import { COLORS } from "../../constants";
-import type { Product, RootStackParamList } from "../../types";
+import { useCart } from "../../contexts";
+
+import type { ICart } from "../../types";
 
 import styles from "./styles/cartTile.style";
 
-const CartTile: React.FC<{ item: Product }> = ({ item, setCartItems }) => {
-  const navigation: NavigationProp<RootStackParamList> = useNavigation();
+const CartTile: React.FC<{
+  item: ICart;
+  setCartItems: Dispatch<SetStateAction<ICart[]>>;
+}> = ({ item, setCartItems }) => {
+  const { updateCart } = useCart();
 
   const handleRemoveItem = async () => {
     axios
       .delete(`${API_URL}api/cart/${item._id}`)
-      .then((response) => setCartItems(response.data.products))
+      .then((response) => {
+        setCartItems(response.data.products);
+        updateCart();
+      })
       .catch((error) => console.error(error));
   };
 

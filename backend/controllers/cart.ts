@@ -78,10 +78,14 @@ async function remove(req: Request, res: Response) {
 
 async function removeAll(req: Request, res: Response) {
   try {
-    const cart: any = await Cart.findOne({ userId: req.params.id }).populate(
+    const cart = await Cart.findOne({ userId: req.params.id }).populate(
       "products.cartItem",
       "_id title supplier price imageUrl"
     );
+
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
 
     cart.products = [];
 

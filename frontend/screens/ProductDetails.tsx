@@ -1,29 +1,35 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { API_URL } from "@env";
+
 import { useEffect, useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import { RouteProp, useRoute } from "@react-navigation/native";
-import {
-  Ionicons,
-  SimpleLineIcons,
-  MaterialCommunityIcons,
-  Fontisto,
-} from "@expo/vector-icons";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { type RouteProp, useRoute } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
+import {
+  Fontisto,
+  Ionicons,
+  MaterialCommunityIcons,
+  SimpleLineIcons,
+} from "@expo/vector-icons";
+
 import { COLORS, SIZES } from "../constants";
-import type { Product, RootStackParamList } from "../types";
+import { useCart } from "../contexts";
+
+import type { IProduct, RootStackParamList } from "../types";
 
 import styles from "./styles/productDetails.style";
-import { API_URL } from "@env";
 
 const ProductDetails: React.FC<{
   navigation: NativeStackNavigationProp<RootStackParamList, "ProductDetails">;
 }> = ({ navigation }) => {
-  const { params } = useRoute<RouteProp<{ Detail: { item: Product } }>>();
+  const { params } = useRoute<RouteProp<{ Detail: { item: IProduct } }>>();
   const [count, setCount] = useState(1);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [favorited, setFavorited] = useState(false);
+  const { updateCart } = useCart();
 
   useEffect(() => {
     const checkFavoriteStatus = async () => {
@@ -72,7 +78,10 @@ const ProductDetails: React.FC<{
         cartItem: params.item,
         quantity: count,
       })
-      .then((_response) => navigation.navigate("Cart"))
+      .then((_response) => {
+        updateCart();
+        navigation.navigate("Cart");
+      })
       .catch((error) => console.error(error))
       .finally(() => setIsAddingToCart(false));
   };
@@ -137,7 +146,7 @@ const ProductDetails: React.FC<{
         }}
         style={styles.image}
       />
-      <View style={styles.details}>
+      <ScrollView style={styles.details}>
         <View style={styles.titleRow}>
           <Text style={styles.title}>{params.item.title}</Text>
           <View style={styles.priceWrapper}>
@@ -198,7 +207,7 @@ const ProductDetails: React.FC<{
             <Fontisto name="shopping-bag" size={22} color={COLORS.lightWhite} />
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };

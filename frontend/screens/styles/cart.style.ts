@@ -35,6 +35,14 @@ const styles = StyleSheet.create({
     color: COLORS.gray,
     marginTop: 3,
   },
+  checkoutBtnLoading: {
+    backgroundColor: COLORS.gray,
+    opacity: 0.7,
+    alignItems: "center",
+    paddingVertical: 12,
+    marginVertical: 8,
+    borderRadius: 12,
+  },
   checkoutBtn: {
     backgroundColor: COLORS.primary,
     alignItems: "center",

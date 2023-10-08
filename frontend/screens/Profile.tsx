@@ -1,25 +1,31 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { API_URL } from "@env";
+
 import { useEffect, useState } from "react";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
 import {
   AntDesign,
   MaterialCommunityIcons,
   SimpleLineIcons,
 } from "@expo/vector-icons";
-import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { API_URL } from "@env";
 
 import { COLORS } from "../constants";
+import { useCart } from "../contexts";
+
+import type { RootStackParamList, IUser } from "../types";
 
 import styles from "./styles/profile.style";
-import type { RootStackParamList, User } from "../types";
 
 const Profile: React.FC<{
   navigation: NativeStackNavigationProp<RootStackParamList, "Profile">;
 }> = ({ navigation }) => {
-  const [userData, setUserData] = useState<User | null>(null);
+  const [userData, setUserData] = useState<IUser | null>(null);
   const [userLogin, setUserLogin] = useState(false);
+  const { updateCart } = useCart();
 
   useEffect(() => {
     checkExistingUser();
@@ -54,7 +60,7 @@ const Profile: React.FC<{
 
             axios
               .delete(`${API_URL}api/cart/clear/${userId?.slice(1, -1)}`)
-              .then((_response) => console.log("Your cart is clean"))
+              .then((_response) => updateCart())
               .catch((error) => console.error(error));
 
             await AsyncStorage.removeItem(`favorites${JSON.parse(userId!)}`);
@@ -129,6 +135,9 @@ const Profile: React.FC<{
           <Text style={styles.name}>
             {userLogin === true
               ? userData?.username
+                  .split(" ")
+                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                  .join(" ")
               : "Please login into your account"}
           </Text>
           {userLogin === false ? (

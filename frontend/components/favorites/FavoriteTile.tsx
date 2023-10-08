@@ -1,16 +1,24 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import { type NavigationProp, useNavigation } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
+
 import { API_URL } from "@env";
 
+import { Dispatch, SetStateAction } from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import { type NavigationProp, useNavigation } from "@react-navigation/native";
+
+import { Ionicons } from "@expo/vector-icons";
+
 import { COLORS } from "../../constants";
-import type { Product, RootStackParamList } from "../../types";
+
+import type { IProduct, RootStackParamList } from "../../types";
 
 import styles from "./styles/favoriteTile.style";
 
-const CartTile: React.FC<{ item: Product }> = ({ item, setFavorites }) => {
+const FavoriteTile: React.FC<{
+  item: IProduct;
+  setFavorites: Dispatch<SetStateAction<IProduct[]>>;
+}> = ({ item, setFavorites }) => {
   const navigation: NavigationProp<RootStackParamList> = useNavigation();
 
   const handleRemoveFavorite = async () => {
@@ -27,7 +35,7 @@ const CartTile: React.FC<{ item: Product }> = ({ item, setFavorites }) => {
     const response = await axios.get(`${API_URL}api/products`);
     const products = response.data;
 
-    const favoritedProducts = products.filter((product: Product) =>
+    const favoritedProducts = products.filter((product: IProduct) =>
       updatedFavorites.includes(product._id)
     );
     setFavorites(favoritedProducts);
@@ -57,4 +65,4 @@ const CartTile: React.FC<{ item: Product }> = ({ item, setFavorites }) => {
   );
 };
 
-export default CartTile;
+export default FavoriteTile;

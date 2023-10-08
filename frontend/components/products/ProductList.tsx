@@ -1,17 +1,21 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, View } from "react-native";
+
 import { API_URL } from "@env";
 
-import ProductCardView from "./ProductCardView";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, FlatList, View } from "react-native";
+
 import { COLORS, SIZES } from "../../constants";
-import type { Product } from "../../types";
+
+import type { IProduct } from "../../types";
+
+import ProductCardView from "./ProductCardView";
 
 import styles from "./styles/productList.style";
 
 const ProductList = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<Product[]>([]);
+  const [data, setData] = useState<IProduct[]>([]);
 
   useEffect(() => {
     setIsLoading(true);

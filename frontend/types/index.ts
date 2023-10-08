@@ -1,4 +1,27 @@
-export type Product = {
+export type ICart = {
+  _id: string;
+  cartItem: {
+    _id: string;
+    imageUrl: string;
+    price: string;
+    supplier: string;
+    title: string;
+  };
+  quantity: number;
+};
+
+export type IOrder = {
+  _id: string;
+  customerId: string;
+  delivery_status: string;
+  payment_status: string;
+  productId: IProduct;
+  quantity: number;
+  total: number;
+  userId: string;
+};
+
+export type IProduct = {
   _id: string;
   title: string;
   supplier: string;
@@ -11,23 +34,11 @@ export type Product = {
   __v: number;
 };
 
-export type User = {
+export type IUser = {
   _id: string;
   username: string;
   email: string;
   location: string;
-};
-
-export type Cart = {
-  _id: string;
-  cartItem: {
-    _id: string;
-    imageUrl: string;
-    price: string;
-    supplier: string;
-    title: string;
-  };
-  quantity: number;
 };
 
 export type RootStackParamList = {
@@ -37,7 +48,7 @@ export type RootStackParamList = {
   Profile: undefined;
   Cart: undefined;
   Login: undefined;
-  ProductDetails: undefined | { item: Product };
+  ProductDetails: undefined | { item: IProduct };
   ProductList: undefined;
   Orders: undefined;
   Favorites: undefined;

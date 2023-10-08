@@ -1,6 +1,7 @@
+import { Request, Response } from "express";
+
 import CryptoJS from "crypto-js";
 import jwt from "jsonwebtoken";
-import { Request, Response } from "express";
 
 import User from "../models/user";
 

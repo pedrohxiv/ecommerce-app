@@ -9,7 +9,7 @@ const OrderSchema = new mongoose.Schema<Order>(
     productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
     quantity: { type: Number, required: true },
     total: { type: Number, required: true },
-    delivery_status: { type: String, default: "pending" },
+    delivery_status: { type: String, default: "Pending" },
     payment_status: { type: String, required: true },
   },
   { timestamps: true }

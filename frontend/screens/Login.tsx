@@ -1,26 +1,31 @@
 import axios from "axios";
-import * as Yup from "yup";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { API_URL } from "@env";
+
 import { useState } from "react";
 import {
   ActivityIndicator,
   Alert,
   Image,
-  type ImageStyle,
-  SafeAreaView,
   ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
+  type ImageStyle,
 } from "react-native";
-import { Formik } from "formik";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { API_URL } from "@env";
+import { SafeAreaView } from "react-native-safe-area-context";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
+import { Formik } from "formik";
+import * as Yup from "yup";
+
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+
 import { COLORS } from "../constants";
-import type { RootStackParamList, User } from "../types";
+
+import type { RootStackParamList } from "../types";
 
 import styles from "./styles/login.style";
 

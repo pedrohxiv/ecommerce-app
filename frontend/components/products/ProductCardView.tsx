@@ -1,19 +1,25 @@
 import axios from "axios";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Ionicons } from "@expo/vector-icons";
-import { type NavigationProp, useNavigation } from "@react-navigation/native";
+
 import { API_URL } from "@env";
 
+import { useState } from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import { type NavigationProp, useNavigation } from "@react-navigation/native";
+
+import { Ionicons } from "@expo/vector-icons";
+
 import { COLORS } from "../../constants";
-import type { Product, RootStackParamList } from "../../types";
+import { useCart } from "../../contexts";
+
+import type { IProduct, RootStackParamList } from "../../types";
 
 import styles from "./styles/productCardView.style";
 
-const ProductCardView: React.FC<{ item: Product }> = ({ item }) => {
+const ProductCardView: React.FC<{ item: IProduct }> = ({ item }) => {
   const navigation: NavigationProp<RootStackParamList> = useNavigation();
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const { updateCart } = useCart();
 
   const handleAddItemToCart = async () => {
     const userId = await AsyncStorage.getItem("id");
@@ -30,7 +36,7 @@ const ProductCardView: React.FC<{ item: Product }> = ({ item }) => {
         cartItem: item,
         quantity: 1,
       })
-      .then()
+      .then((_response) => updateCart())
       .catch((error) => console.error(error))
       .finally(() => setIsAddingToCart(false));
   };

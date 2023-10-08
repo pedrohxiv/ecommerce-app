@@ -1,4 +1,7 @@
 import axios from "axios";
+
+import { API_URL } from "@env";
+
 import { useState } from "react";
 import {
   FlatList,
@@ -8,18 +11,19 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 import { Ionicons, Feather } from "@expo/vector-icons";
-import { API_URL } from "@env";
 
 import { SearchTile } from "../components";
 import { COLORS, SIZES } from "../constants";
 
+import type { IProduct } from "../types";
+
 import styles from "./styles/search.style";
-import type { Product } from "../types";
 
 const Search = () => {
   const [searchKey, setSearchKey] = useState("");
-  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [searchResults, setSearchResults] = useState<IProduct[]>([]);
 
   const handleSearch = () => {
     axios
@@ -45,6 +49,7 @@ const Search = () => {
             onChangeText={setSearchKey}
             placeholder="What are you looking for"
             autoFocus={true}
+            onSubmitEditing={handleSearch}
           />
         </View>
         <View>
@@ -63,9 +68,7 @@ const Search = () => {
       ) : (
         <FlatList
           data={searchResults}
-          renderItem={({ item }) => (
-            <SearchTile key={item._id} item={item} />
-          )}
+          renderItem={({ item }) => <SearchTile key={item._id} item={item} />}
           style={{ marginHorizontal: 12 }}
         />
       )}

@@ -1,21 +1,25 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { API_URL } from "@env";
+
 import { useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { API_URL } from "@env";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { FavoriteTile } from "../components";
 
+import type { IProduct, RootStackParamList } from "../types";
+
 import styles from "./styles/favorites.style";
-import type { Product, RootStackParamList } from "../types";
 
 const Favorites: React.FC<{
   navigation: NativeStackNavigationProp<RootStackParamList, "Favorites">;
 }> = ({ navigation }) => {
-  const [favorites, setFavorites] = useState<Product[]>([]);
+  const [favorites, setFavorites] = useState<IProduct[]>([]);
 
   useEffect(() => {
     const loadFavorites = async () => {
@@ -30,7 +34,7 @@ const Favorites: React.FC<{
           const response = await axios.get(`${API_URL}api/products`);
           const products = response.data;
 
-          const favoritedProducts = products.filter((product: Product) =>
+          const favoritedProducts = products.filter((product: IProduct) =>
             parsedFavorites.includes(product._id)
           );
           setFavorites(favoritedProducts);
